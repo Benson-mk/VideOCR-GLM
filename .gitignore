@@ -1,0 +1,197 @@
+# Dependencies
+node_modules
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Build outputs
+dist
+dist-ssr
+*.tsbuildinfo
+
+# Local files
+*.local
+.env.local
+.env.*.local
+
+# Environment files (sensitive)
+config/.env
+config/.env.*
+!.env.example
+
+# Coverage
+coverage
+stats.html
+.nyc_output
+.coverage
+htmlcov/
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+.playwright-cli/
+
+# Husky / local hooks
+.husky/
+
+# Documentation
+dev_docs/
+
+# Frontend workspace
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/.vite
+frontend/tsconfig.web.tsbuildinfo
+
+# Backend workspace
+backend/node_modules
+backend/dist
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Electron build outputs
+dist-electron
+electron-builder.yml
+electron-builder-cache
+out/
+
+# Python CLI bundled executable
+VideOCR-GLM-CLI/dist
+VideOCR-GLM-CLI/build
+VideOCR-GLM-CLI/*.spec
+VideOCR-GLM-CLI/__pycache__/
+VideOCR-GLM-CLI/.pytest_cache/
+VideOCR-GLM-CLI/.coverage
+VideOCR-GLM-CLI/htmlcov/
+
+# Video samples and uploads (large files)
+videoSemple/*
+!videoSemple/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.webm
+*.m4v
+*.srt
+*.vtt
+*.ass
+
+# Package managers
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log.*
+
+# Archives
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.bz2
+
+# Auto-generated type declarations (frontend)
+frontend/src/types/declaration-files/components.d.ts
+frontend/src/types/declaration-files/auto-import.d.ts
+frontend/.eslintrc-auto-import.json
+backend/.eslintrc-auto-import.json
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/*
+.idea
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.parcel-cache/
+
+# Security and sensitive data
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+credentials/
+*.env
+*.env.*
+!.env.example
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+.mypy_cache/
+
+# Build tools
+.cache/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
+.npm
+.eslintcache
+.stylelintcache

@@ -1,0 +1,119 @@
+{
+  "name": "videocr-glm",
+  "version": "1.0.0",
+  "description": "VideOCR-GLM monorepo workspace",
+  "author": "Benson-mk",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "npm run dev --workspace=frontend",
+    "dev:test": "npm run dev:test --workspace=frontend",
+    "dev:prod": "npm run dev:prod --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev\"",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "build": "npm run build --workspace=frontend",
+    "build:dev": "npm run build:dev --workspace=frontend",
+    "build:test": "npm run build:test --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:all": "npm run build && npm run build:backend",
+    "build:electron": "npm run build:all && electron-builder && node scripts/copy-dependencies.cjs",
+    "build:electron:fast": "npm run build:all && electron-builder --publish never --x64 && node scripts/copy-dependencies.cjs",
+    "build:electron:clean": "npm run clean && npm run build:electron:fast",
+    "clean": "node scripts/clean.cjs",
+    "preview": "npm run preview --workspace=frontend && npm run preview --workspace=backend",
+    "lint": "npm run lint --workspace=frontend && npm run lint --workspace=backend",
+    "format": "npm run format --workspace=frontend && npm run format --workspace=backend",
+    "backup": "git add . && git commit -m \"chore: backup\" && git push"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^41.0.1",
+    "electron-builder": "^26.8.1",
+    "rcedit": "^5.0.2",
+    "rimraf": "^5.0.5"
+  },
+  "build": {
+    "appId": "com.videocr.glm",
+    "productName": "VideOCR-GLM",
+    "asar": false,
+    "directories": {
+      "output": "dist-electron",
+      "buildResources": "assets"
+    },
+    "files": [
+      "electron/**/*",
+      "frontend/dist/**/*",
+      "backend/dist/**/*",
+      "backend/package.json",
+      "assets/**/*",
+      "node_modules/**/*",
+      "config/**/*",
+      "package.json",
+      "!**/.git/**",
+      "!**/.gitignore",
+      "!**/.vscode/**",
+      "!**/node_modules/**/test/**",
+      "!**/node_modules/**/tests/**",
+      "!**/node_modules/**/__tests__/**",
+      "!**/*.md",
+      "!**/.npmignore",
+      "!**/.eslintrc*",
+      "!**/tsconfig.json",
+      "!**/*.map",
+      "!**/.DS_Store",
+      "!**/Thumbs.db"
+    ],
+    "asarUnpack": [],
+    "extraResources": [
+      {
+        "from": "VideOCR-GLM-CLI/dist/videocr_glm_cli.exe",
+        "to": "VideOCR-GLM-CLI/dist/videocr_glm_cli.exe"
+      },
+      {
+        "from": "VideOCR-GLM-CLI/dist/*.pyd",
+        "to": "VideOCR-GLM-CLI/dist/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules",
+        "to": "app/node_modules"
+      }
+    ],
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "compression": "maximum",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "signAndEditExecutable": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "afterPack": "scripts/inject-icon.cjs",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "VideOCR-GLM",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    }
+  }
+}
