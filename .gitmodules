@@ -1,0 +1,3 @@
+[submodule "VideOCR-GLM-CLI"]
+	path = VideOCR-GLM-CLI
+	url = https://github.com/Benson-mk/VideOCR-GLM-CLI.git
