@@ -46,6 +46,9 @@ const defaultAdvancedSettings: AdvancedSettings = {
   system: {
     allow_system_sleep: false,
     parallel_workers: 1,
+    cleanup_enabled: true,
+    cleanup_max_age: 1, // hours
+    cleanup_interval: 1, // hours
   },
 }
 

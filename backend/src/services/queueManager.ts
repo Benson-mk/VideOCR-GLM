@@ -21,6 +21,12 @@ export class QueueManager {
   private parallelWorkers: number = 1
   private activeWorkers: number = 0
   private isProcessing: boolean = false
+  
+  // Cleanup settings
+  private cleanupEnabled: boolean = true
+  private cleanupMaxAge: number = 3600000 // 1 hour in milliseconds
+  private cleanupInterval: number = 3600000 // 1 hour in milliseconds
+  private cleanupTimer: NodeJS.Timeout | null = null
 
   /**
    * Set the number of parallel workers
@@ -414,12 +420,88 @@ export class QueueManager {
       console.log(`[QueueManager] Cleaned up ${cleared} old items`)
     }
   }
+
+  /**
+   * Get cleanup settings
+   */
+  getCleanupSettings(): {
+    enabled: boolean
+    maxAge: number
+    interval: number
+  } {
+    return {
+      enabled: this.cleanupEnabled,
+      maxAge: this.cleanupMaxAge,
+      interval: this.cleanupInterval,
+    }
+  }
+
+  /**
+   * Update cleanup settings
+   */
+  updateCleanupSettings(settings: {
+    enabled?: boolean
+    maxAge?: number
+    interval?: number
+  }): void {
+    if (settings.enabled !== undefined) {
+      this.cleanupEnabled = settings.enabled
+      console.log(`[QueueManager] Cleanup enabled: ${this.cleanupEnabled}`)
+    }
+
+    if (settings.maxAge !== undefined) {
+      this.cleanupMaxAge = Math.max(60000, settings.maxAge) // Minimum 1 minute
+      console.log(`[QueueManager] Cleanup max age: ${this.cleanupMaxAge}ms`)
+    }
+
+    if (settings.interval !== undefined) {
+      this.cleanupInterval = Math.max(60000, settings.interval) // Minimum 1 minute
+      console.log(`[QueueManager] Cleanup interval: ${this.cleanupInterval}ms`)
+    }
+
+    // Restart cleanup timer with new settings
+    this.restartCleanupTimer()
+  }
+
+  /**
+   * Start cleanup timer
+   */
+  private startCleanupTimer(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer)
+    }
+
+    if (this.cleanupEnabled) {
+      this.cleanupTimer = setInterval(() => {
+        this.cleanupOldItems(this.cleanupMaxAge)
+      }, this.cleanupInterval)
+
+      console.log(`[QueueManager] Cleanup timer started (interval: ${this.cleanupInterval}ms)`)
+    }
+  }
+
+  /**
+   * Stop cleanup timer
+   */
+  private stopCleanupTimer(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer)
+      this.cleanupTimer = null
+      console.log(`[QueueManager] Cleanup timer stopped`)
+    }
+  }
+
+  /**
+   * Restart cleanup timer with current settings
+   */
+  private restartCleanupTimer(): void {
+    this.stopCleanupTimer()
+    this.startCleanupTimer()
+  }
 }
 
 // Singleton instance
 export const queueManager = new QueueManager()
 
-// Clean up old items every hour
-setInterval(() => {
-  queueManager.cleanupOldItems()
-}, 3600000)
+// Start cleanup timer with default settings
+queueManager['startCleanupTimer']()

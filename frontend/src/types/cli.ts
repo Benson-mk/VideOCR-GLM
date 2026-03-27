@@ -35,6 +35,9 @@ export interface ImageProcessingSettings {
 export interface SystemSettings {
   allow_system_sleep: boolean
   parallel_workers: number
+  cleanup_enabled: boolean
+  cleanup_max_age: number // hours
+  cleanup_interval: number // hours
 }
 
 export interface GeneralSettings {

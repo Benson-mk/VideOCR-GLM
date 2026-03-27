@@ -332,6 +332,63 @@
           </a-col>
         </a-row>
 
+        <!-- Queue Cleanup Settings -->
+        <a-divider>Queue Cleanup</a-divider>
+
+        <a-form-item>
+          <a-checkbox v-model:checked="settings.advanced.system.cleanup_enabled">
+            Enable Automatic Queue Cleanup
+          </a-checkbox>
+        </a-form-item>
+
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="Cleanup Max Age (hours)">
+              <a-input-number
+                v-model:value="settings.advanced.system.cleanup_max_age"
+                :min="1"
+                :step="0.5"
+                style="width: 100%"
+              />
+              <template #extra>
+                Remove completed items older than this duration
+              </template>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="Cleanup Interval (hours)">
+              <a-input-number
+                v-model:value="settings.advanced.system.cleanup_interval"
+                :min="1"
+                :step="0.5"
+                style="width: 100%"
+              />
+              <template #extra>
+                How often to run automatic cleanup
+              </template>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-form-item label="Manual Cleanup">
+          <a-space>
+            <a-button
+              :loading="cleaningQueue"
+              @click="cleanupQueueNow"
+            >
+              <template #icon>
+                <DeleteOutlined />
+              </template>
+              Cleanup Old Items Now
+            </a-button>
+            <a-tooltip
+              title="Immediately remove completed items older than the max age setting"
+            >
+              <InfoCircleOutlined style="color: #999" />
+            </a-tooltip>
+          </a-space>
+        </a-form-item>
+
         <a-form-item label="Backend Uploads">
           <a-space>
             <a-button
@@ -428,6 +485,7 @@ const brightnessThreshold = ref<number | undefined>(
   settings.advanced.image_processing.brightness_threshold,
 )
 const clearingUploads = ref(false)
+const cleaningQueue = ref(false)
 
 // Initialize
 onMounted(() => {
@@ -487,7 +545,7 @@ const filterLanguage = (input: string, option: any) => {
   )
 }
 
-const saveSettings = () => {
+const saveSettings = async () => {
   // Update crop zones
   settings.advanced.crop_zones = []
   if (cropZone1.width > 0 && cropZone1.height > 0) {
@@ -503,6 +561,32 @@ const saveSettings = () => {
 
   settingsStore.updateGeneralSettings(settings.general)
   settingsStore.updateAdvancedSettings(settings.advanced)
+
+  // Sync cleanup settings to backend
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}/api/queue/cleanup-settings`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          enabled: settings.advanced.system.cleanup_enabled,
+          maxAge: settings.advanced.system.cleanup_max_age * 3600000, // Convert hours to milliseconds
+          interval: settings.advanced.system.cleanup_interval * 3600000, // Convert hours to milliseconds
+        }),
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('Failed to update cleanup settings')
+    }
+  } catch (error) {
+    console.error('[Settings] Update cleanup settings error:', error)
+    message.warning('Settings saved but failed to update cleanup settings on backend')
+    return
+  }
 
   message.success('Settings saved successfully')
 }
@@ -574,6 +658,37 @@ const importSettings = (file: File) => {
   reader.readAsText(file)
 
   return false
+}
+
+const cleanupQueueNow = async () => {
+  try {
+    cleaningQueue.value = true
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}/api/queue/cleanup-now`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          maxAge: settings.advanced.system.cleanup_max_age * 3600000, // Convert hours to milliseconds
+        }),
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('Failed to cleanup queue')
+    }
+
+    const data = await response.json()
+    message.success(data.message || 'Queue cleanup completed successfully')
+  } catch (error) {
+    console.error('[Settings] Cleanup queue error:', error)
+    message.error('Failed to cleanup queue')
+  } finally {
+    cleaningQueue.value = false
+  }
 }
 
 const clearBackendUploads = async () => {

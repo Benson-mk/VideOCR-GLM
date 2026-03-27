@@ -326,6 +326,70 @@ app.post('/api/queue/workers', (req, res) => {
   }
 })
 
+// Get cleanup settings endpoint
+app.get('/api/queue/cleanup-settings', (req, res) => {
+  try {
+    const settings = queueManager.getCleanupSettings()
+    res.json(settings)
+  } catch (error) {
+    console.error('[API] Get cleanup settings error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Update cleanup settings endpoint
+app.post('/api/queue/cleanup-settings', (req, res) => {
+  try {
+    const { enabled, maxAge, interval } = req.body
+
+    // Validate maxAge (in milliseconds, minimum 1 minute)
+    if (maxAge !== undefined) {
+      if (typeof maxAge !== 'number' || maxAge < 60000) {
+        return res.status(400).json({ error: 'Invalid maxAge (must be at least 60000ms)' })
+      }
+    }
+
+    // Validate interval (in milliseconds, minimum 1 minute)
+    if (interval !== undefined) {
+      if (typeof interval !== 'number' || interval < 60000) {
+        return res.status(400).json({ error: 'Invalid interval (must be at least 60000ms)' })
+      }
+    }
+
+    // Validate enabled
+    if (enabled !== undefined && typeof enabled !== 'boolean') {
+      return res.status(400).json({ error: 'Invalid enabled value (must be boolean)' })
+    }
+
+    queueManager.updateCleanupSettings({ enabled, maxAge, interval })
+    res.json({ message: 'Cleanup settings updated' })
+  } catch (error) {
+    console.error('[API] Update cleanup settings error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Trigger immediate cleanup endpoint
+app.post('/api/queue/cleanup-now', (req, res) => {
+  try {
+    const { maxAge } = req.body
+
+    if (maxAge !== undefined) {
+      if (typeof maxAge !== 'number' || maxAge < 60000) {
+        return res.status(400).json({ error: 'Invalid maxAge (must be at least 60000ms)' })
+      }
+      queueManager.cleanupOldItems(maxAge)
+    } else {
+      queueManager.cleanupOldItems()
+    }
+
+    res.json({ message: 'Cleanup triggered successfully' })
+  } catch (error) {
+    console.error('[API] Cleanup now error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // Download file endpoint
 app.get('/api/download', (req, res) => {
   try {
