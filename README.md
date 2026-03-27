@@ -150,7 +150,7 @@ The GUI will be available at `http://localhost:3000`
 - Python 3.8 or higher
 
 **Instructions:**
-See [VideOCR-GLM-CLI/README.md](VideOCR-GLM-CLI/README.md) for CLI usage and documentation.
+See [VideOCR-GLM-CLI/README.md](https://github.com/Benson-mk/VideOCR-GLM-CLI/blob/main/README.md) for CLI usage and documentation.
 
 **CLI Repository**: [https://github.com/Benson-mk/VideOCR-GLM-CLI](https://github.com/Benson-mk/VideOCR-GLM-CLI)
 ---
@@ -272,7 +272,7 @@ After building the Electron app:
 3. Use the same interface as the Web GUI
 4. All features work offline (except Ollama connection)
 ### CLI
-For command-line usage, see [VideOCR-GLM-CLI/README.md](VideOCR-GLM-CLI/README.md).
+For command-line usage, see [VideOCR-GLM-CLI/README.md](https://github.com/Benson-mk/VideOCR-GLM-CLI/blob/main/README.md).
 ---
 ## Project Structure
 ```
@@ -479,7 +479,7 @@ npm run build            # Build for production
 - Verify all dependencies are installed
 ---
 ## Documentation
-- **CLI Documentation**: [VideOCR-GLM-CLI/README.md](VideOCR-GLM-CLI/README.md) - Command-line usage and API reference
+- **CLI Documentation**: [VideOCR-GLM-CLI/README.md](https://github.com/Benson-mk/VideOCR-GLM-CLI/blob/main/README.md) - Command-line usage and API reference
 ---
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
