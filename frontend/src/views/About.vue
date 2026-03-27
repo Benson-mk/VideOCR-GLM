@@ -42,7 +42,7 @@
           <a-space direction="vertical" style="width: 100%">
             <a-button
               type="link"
-              href="https://github.com/Benson-mk/VideOCR-GLM"
+              href="https://github.com/yourusername/VideOCR-GLM"
               target="_blank"
             >
               <template #icon>
@@ -52,7 +52,7 @@
             </a-button>
             <a-button
               type="link"
-              href="https://github.com/Benson-mk/VideOCR-GLM/issues"
+              href="https://github.com/yourusername/VideOCR-GLM/issues"
               target="_blank"
             >
               <template #icon>
@@ -62,7 +62,7 @@
             </a-button>
             <a-button
               type="link"
-              href="https://github.com/Benson-mk/VideOCR-GLM/blob/main/README.md"
+              href="https://github.com/yourusername/VideOCR-GLM/blob/main/README.md"
               target="_blank"
             >
               <template #icon>
@@ -76,8 +76,14 @@
         <!-- Version Info -->
         <a-card type="inner" title="Version Information">
           <a-descriptions :column="1" bordered>
-            <a-descriptions-item label="GUI Version">
-              {{ guiVersion }}
+            <a-descriptions-item label="Build Version">
+              {{ buildVersion }}
+            </a-descriptions-item>
+            <a-descriptions-item label="Frontend Version">
+              {{ frontendVersion }}
+            </a-descriptions-item>
+            <a-descriptions-item label="Backend Version">
+              {{ backendVersion }}
             </a-descriptions-item>
             <a-descriptions-item label="CLI Version">
               {{ cliVersion }}
@@ -110,7 +116,7 @@
           <p>This project is licensed under the MIT License.</p>
           <a-button
             type="link"
-            href="https://github.com/Benson-mk/VideOCR-GLM/blob/main/LICENSE"
+            href="https://github.com/yourusername/VideOCR-GLM/blob/main/LICENSE"
             target="_blank"
           >
             View License
@@ -129,10 +135,13 @@ import {
   BugOutlined,
   FileTextOutlined,
 } from '@ant-design/icons-vue'
+import { versions } from '../versions'
 
-const guiVersion = ref('1.0.0')
-const cliVersion = ref('1.0.0')
-const buildDate = ref('')
+const buildVersion = ref(versions.buildVersion)
+const frontendVersion = ref(versions.frontendVersion)
+const backendVersion = ref(versions.backendVersion)
+const cliVersion = ref(versions.cliVersion)
+const buildDate = ref(new Date(versions.buildDate).toLocaleDateString())
 const nodeVersion = ref('')
 
 const features = [

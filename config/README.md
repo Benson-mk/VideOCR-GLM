@@ -4,7 +4,7 @@ Vite supports specifying the current environment through the `--mode` parameter 
 
 ## Official Documentation
 
-- [Environment Variables and Modes](https://cn.vitejs.dev/guide/env-and-mode.html)
+- [Environment Variables and Modes](https://vitejs.dev/guide/env-and-mode.html)
 
 ## File Naming Rules
 
